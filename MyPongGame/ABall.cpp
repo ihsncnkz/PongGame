@@ -1,0 +1,108 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "ABall.h"
+
+
+// Sets default values
+AABall::AABall()
+{
+ 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = true;
+
+	BallMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BallMesh"));
+	RootComponent = BallMesh;
+
+	BallMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	BallMesh->SetCollisionProfileName(TEXT("BlockAll"));
+
+	BallMesh->SetSimulatePhysics(false);
+
+	MaxX = 800.f;
+	MinX = -800.f;
+	MaxY = 400.f;
+	MinY = -400.f;
+}
+
+// Called when the game starts or when spawned
+void AABall::BeginPlay()
+{
+	Super::BeginPlay();
+
+	StartLocation = GetActorLocation();
+
+	float Angle = FMath::FRandRange(-30.f, 30.f);
+	float Radian = FMath::DegreesToRadians(Angle);
+
+	float X_Direction = FMath::RandBool() ? 1.f : -1.f;
+	float Y_Direction = FMath::RandBool() ? 1.f : -1.f;
+
+	Velocity = FVector(FMath::Cos(Radian) * X_Direction, FMath::Sin(Radian) * Y_Direction, 0.f) * MoveSpeed;
+}
+
+// Called every frame
+void AABall::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	FVector NewLocation = GetActorLocation() + Velocity * DeltaTime;
+
+	if (NewLocation.Y > MaxY || NewLocation.Y < MinY)
+	{
+		Velocity.Y *= -1.f;
+		NewLocation.Y = FMath::Clamp(NewLocation.Y, MinY, MaxY);
+	}
+
+	if (NewLocation.X > MaxX)
+	{
+		if (CheckPaddleCollision(PlayerPaddleRef))
+		{
+			Velocity.X *= -1.f;
+		}
+		else
+		{
+			ResetBall();
+			return;
+		}
+	}
+
+	else if (NewLocation.X < MinX)
+	{
+		if (CheckPaddleCollision(AIPaddleRef))
+		{
+			Velocity.X *= -1.f;
+		}
+		else
+		{
+			ResetBall();
+			return;
+		}
+	}
+	SetActorLocation(NewLocation, true);
+}
+
+bool AABall::CheckPaddleCollision(AActor* Paddle)
+{
+	if (!Paddle) return false;
+
+	FVector BallLocation = GetActorLocation();
+	FVector PaddleLocation = Paddle->GetActorLocation();
+	FVector PaddleExtent = Paddle->GetSimpleCollisionCylinderExtent();
+
+	float PaddleYMin = PaddleLocation.Y - PaddleExtent.Y;
+	float PaddleYMax = PaddleLocation.Y + PaddleExtent.Y;
+
+	return BallLocation.Y >= PaddleYMin && BallLocation.Y <= PaddleYMax;
+}
+
+void AABall::ResetBall()
+{
+	SetActorLocation(StartLocation);
+	float Angle = FMath::FRandRange(-30.f, 30.f);
+	float Radian = FMath::DegreesToRadians(Angle);
+
+	float X_Direction = FMath::RandBool() ? 1.f : -1.f;
+	float Y_Direction = FMath::RandBool() ? 1.f : -1.f;
+
+	Velocity = FVector(FMath::Cos(Radian) * X_Direction, FMath::Sin(Radian) * Y_Direction, 0.f) * MoveSpeed;
+}
