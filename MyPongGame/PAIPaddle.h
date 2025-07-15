@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "Components/StaticMeshComponent.h"
 #include "PAIPaddle.generated.h"
+
+class AABall;
 
 UCLASS()
 class MYPONGGAME_API APAIPaddle : public APawn
@@ -26,4 +29,12 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* PaddleMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+	AABall* BallRef;
+
+	UPROPERTY(EditAnywhere, Category = "AI")
+	float MoveSpeed = 600.f;
 };

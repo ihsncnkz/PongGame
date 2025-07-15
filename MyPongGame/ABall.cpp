@@ -2,7 +2,7 @@
 
 
 #include "ABall.h"
-
+#include "PAIPaddle.h" 
 
 // Sets default values
 AABall::AABall()
@@ -58,6 +58,11 @@ void AABall::Tick(float DeltaTime)
 		if (CheckPaddleCollision(PlayerPaddleRef))
 		{
 			Velocity.X *= -1.f;
+
+			FVector PaddleLocation = PlayerPaddleRef->GetActorLocation();
+			FVector PaddleExtent = PlayerPaddleRef->GetSimpleCollisionCylinderExtent();
+			NewLocation.X = PaddleLocation.X - PaddleExtent.X - 5.f;
+			return;
 		}
 		else
 		{

@@ -4,10 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "GameFramework/Pawn.h"
 #include "Components/StaticMeshComponent.h"
 #include "PPlayerPaddle.h"
-#include "PAIPaddle.h"
 #include "ABall.generated.h"
+
+class APAIPaddle;
 
 UCLASS()
 class MYPONGGAME_API AABall : public AActor
