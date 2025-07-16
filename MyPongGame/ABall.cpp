@@ -2,7 +2,9 @@
 
 
 #include "ABall.h"
-#include "PAIPaddle.h" 
+#include "PAIPaddle.h"
+
+constexpr float MaxBounceAngle = 60.f;
 
 // Sets default values
 AABall::AABall()
@@ -57,12 +59,33 @@ void AABall::Tick(float DeltaTime)
 	{
 		if (CheckPaddleCollision(PlayerPaddleRef))
 		{
+			/* Old Code
 			Velocity.X *= -1.f;
 
 			FVector PaddleLocation = PlayerPaddleRef->GetActorLocation();
 			FVector PaddleExtent = PlayerPaddleRef->GetSimpleCollisionCylinderExtent();
 			NewLocation.X = PaddleLocation.X - PaddleExtent.X - 5.f;
 			return;
+			*/
+
+			FVector PaddleLocation = PlayerPaddleRef->GetActorLocation();
+			FVector PaddleExtent = PlayerPaddleRef->GetSimpleCollisionCylinderExtent();
+
+			float PaddleCenterY = PaddleLocation.Y;
+			float HitPointY = NewLocation.Y;
+
+			float Offset = HitPointY - PaddleCenterY;
+			float PaddleHeight = PaddleExtent.Y;
+			float Normalized = FMath::Clamp(Offset / PaddleHeight, -1.f, 1.f);
+
+			float Angle = Normalized * MaxBounceAngle;
+			float Speed = Velocity.Size();
+			float OldSign = FMath::Sign(Velocity.X);
+
+			Velocity.X = Speed * FMath::Cos(FMath::DegreesToRadians(Angle)) * -OldSign;
+			Velocity.Y = Speed * FMath::Sin(FMath::DegreesToRadians(Angle));
+
+			NewLocation.X = PaddleLocation.X - PaddleExtent.X + 5.f;
 		}
 		else
 		{
@@ -75,7 +98,27 @@ void AABall::Tick(float DeltaTime)
 	{
 		if (CheckPaddleCollision(AIPaddleRef))
 		{
-			Velocity.X *= -1.f;
+			// Velocity.X *= -1.f; Old Code
+
+			FVector PaddleLocation = AIPaddleRef->GetActorLocation();
+			FVector PaddleExtent = AIPaddleRef->GetSimpleCollisionCylinderExtent();
+
+			float PaddleCenterY = PaddleLocation.Y;
+			float HitPointY = NewLocation.Y;
+
+			float Offset = HitPointY - PaddleCenterY;
+			float PaddleHeight = PaddleExtent.Y;
+			float Normalized = FMath::Clamp(Offset / PaddleHeight, -1.f, 1.f);
+
+			float Angle = Normalized * MaxBounceAngle;
+			float Speed = Velocity.Size();
+			float OldSign = FMath::Sign(Velocity.X);
+
+			Velocity.X = Speed * FMath::Cos(FMath::DegreesToRadians(Angle)) * -OldSign;
+			Velocity.Y = Speed * FMath::Sin(FMath::DegreesToRadians(Angle));
+
+
+			NewLocation.X = PaddleLocation.X + PaddleExtent.X - 5.f;
 		}
 		else
 		{
