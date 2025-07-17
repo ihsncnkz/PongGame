@@ -14,4 +14,19 @@ class MYPONGGAME_API APongGameState : public AGameStateBase
 {
 	GENERATED_BODY()
 	
+public:
+	
+	APongGameState();
+
+	UFUNCTION(BlueprintCallable)
+	FString GetGameTimeText() const;
+
+protected:
+	
+	virtual void Tick(float DeltaSeconds) override;
+
+private:
+	
+	float ElapsedTime;
+
 };

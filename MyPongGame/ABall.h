@@ -51,6 +51,12 @@ private:
 	float MoveSpeed = 800.f;
 
 	UPROPERTY(EditAnywhere, Category = "BallAction")
+	float SpeedIncreaseRate = 10.f;
+
+	UPROPERTY(EditAnywhere, Category = "BallAction")
+	float InitialMoveSpeed = 800.f;
+
+	UPROPERTY(EditAnywhere, Category = "BallAction")
 	float MaxX = 800.f;
 
 	UPROPERTY(EditAnywhere, Category = "BallAction")

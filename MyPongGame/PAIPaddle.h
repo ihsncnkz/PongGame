@@ -37,4 +37,10 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "AI")
 	float MoveSpeed = 600.f;
+
+	UPROPERTY(EditAnywhere, Category = "AI")
+	float MinY = -400.f;
+
+	UPROPERTY(EditAnywhere, Category = "AI")
+	float MaxY = 400.f;
 };

@@ -24,6 +24,10 @@ AABall::AABall()
 	MinX = -800.f;
 	MaxY = 400.f;
 	MinY = -400.f;
+
+	MoveSpeed = 800.f;
+	InitialMoveSpeed = 800.f;
+	SpeedIncreaseRate = 10.f;
 }
 
 // Called when the game starts or when spawned
@@ -46,6 +50,13 @@ void AABall::BeginPlay()
 void AABall::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	MoveSpeed += SpeedIncreaseRate * DeltaTime;
+
+	if (!Velocity.IsNearlyZero())
+	{
+		Velocity = Velocity.GetSafeNormal() * MoveSpeed;
+	}
 
 	FVector NewLocation = GetActorLocation() + Velocity * DeltaTime;
 
@@ -146,6 +157,9 @@ bool AABall::CheckPaddleCollision(AActor* Paddle)
 void AABall::ResetBall()
 {
 	SetActorLocation(StartLocation);
+
+	MoveSpeed = InitialMoveSpeed;
+
 	float Angle = FMath::FRandRange(-30.f, 30.f);
 	float Radian = FMath::DegreesToRadians(Angle);
 

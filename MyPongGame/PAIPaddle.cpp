@@ -45,6 +45,13 @@ void APAIPaddle::Tick(float DeltaTime)
 
 			MyLocation.Y += MoveStep;
 			SetActorLocation(MyLocation);
+
+			FVector PaddleExtant = PaddleMesh->GetStaticMesh() ? PaddleMesh->GetStaticMesh()->GetBoundingBox().GetExtent() : FVector(0, 50, 0);
+			float PaddleHalfHeight = PaddleExtant.Y;
+
+			MyLocation.Y = FMath::Clamp(MyLocation.Y, MinY + PaddleHalfHeight, MaxY - PaddleHalfHeight);
+
+			SetActorLocation(MyLocation);
 		}
 	}
 }
