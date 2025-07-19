@@ -21,6 +21,16 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FString GetGameTimeText() const;
 
+	UFUNCTION(BlueprintCallable)
+	void EndGame(bool bPlayerOrAI);
+
+	UPROPERTY(BlueprintReadWrite)
+	int32 PlayerScore = 0;
+
+	UPROPERTY(BlueprintReadWrite)
+	int32 AIScore = 0;
+
+
 protected:
 	
 	virtual void Tick(float DeltaSeconds) override;

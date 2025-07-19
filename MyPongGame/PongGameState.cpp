@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
+#include "Kismet/GameplayStatics.h"
 #include "PongGameState.h"
 
 APongGameState::APongGameState()
@@ -25,3 +25,14 @@ FString APongGameState::GetGameTimeText() const
 }
 
 
+void APongGameState::EndGame(bool bPlayerOrAI)
+{
+	if (bPlayerOrAI)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Cyan, TEXT("Player Win"));
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, TEXT("AI Win"));
+	}
+}

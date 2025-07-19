@@ -2,6 +2,7 @@
 
 
 #include "ABall.h"
+#include "PongGameState.h"
 #include "PAIPaddle.h"
 
 constexpr float MaxBounceAngle = 60.f;
@@ -100,6 +101,17 @@ void AABall::Tick(float DeltaTime)
 		}
 		else
 		{
+			if (APongGameState* gs = GetWorld()->GetGameState<APongGameState>())
+			{
+				gs->AIScore++;
+
+				if (gs->AIScore == 5)
+				{
+					gs->EndGame(false);
+				}
+			}
+
+
 			ResetBall();
 			return;
 		}
@@ -133,11 +145,24 @@ void AABall::Tick(float DeltaTime)
 		}
 		else
 		{
+			if (APongGameState* gs = GetWorld()->GetGameState<APongGameState>())
+			{
+				gs->PlayerScore++;
+
+				if (gs->PlayerScore == 5)
+				{
+					gs->EndGame(true);
+				}
+			}
+
 			ResetBall();
 			return;
 		}
 	}
 	SetActorLocation(NewLocation, true);
+
+
+	
 }
 
 bool AABall::CheckPaddleCollision(AActor* Paddle)
