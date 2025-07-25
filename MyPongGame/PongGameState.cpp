@@ -1,7 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Kismet/GameplayStatics.h"
 #include "PongGameState.h"
+
+#include "Kismet/GameplayStatics.h"
 
 APongGameState::APongGameState()
 {

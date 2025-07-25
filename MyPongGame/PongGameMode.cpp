@@ -2,15 +2,35 @@
 
 
 #include "PongGameMode.h"
+
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 #include "Camera/CameraActor.h"
 #include "GameFramework/PlayerController.h"
+#include "Blueprint/UserWidget.h"
 
 
 void APongGameMode::BeginPlay()
 {
     Super::BeginPlay();
+
+    if (MainMenuWidgetClass)
+    {
+        MainMenuWidget = CreateWidget<UUserWidget>(GetWorld(), MainMenuWidgetClass);
+        if (MainMenuWidget)
+        {
+            MainMenuWidget->AddToViewport();
+
+            APlayerController* PC = GetWorld()->GetFirstPlayerController(); 
+            if (PC)
+            {
+                FInputModeUIOnly InputMode;
+                InputMode.SetWidgetToFocus(MainMenuWidget->TakeWidget());
+                PC->SetInputMode(InputMode);
+                PC->bShowMouseCursor = true;
+            }
+        }
+    }
 
     TArray<AActor*> Cameras;
     UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName("MainCamera"), Cameras);

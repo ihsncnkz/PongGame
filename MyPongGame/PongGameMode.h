@@ -17,4 +17,9 @@ class MYPONGGAME_API APongGameMode : public AGameModeBase
 public:
 
 	virtual void BeginPlay() override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<UUserWidget> MainMenuWidgetClass;
+
+	UUserWidget* MainMenuWidget;
 };
