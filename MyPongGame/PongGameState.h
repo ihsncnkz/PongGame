@@ -30,6 +30,9 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	int32 AIScore = 0;
 
+	UPROPERTY(BlueprintReadWrite)
+	bool bGameStarted = false;
+
 
 protected:
 	

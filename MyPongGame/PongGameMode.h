@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "Blueprint/UserWidget.h"
 #include "PongGameMode.generated.h"
 
 /**
@@ -22,4 +23,12 @@ public:
 	TSubclassOf<UUserWidget> MainMenuWidgetClass;
 
 	UUserWidget* MainMenuWidget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<UUserWidget> EndGameWidgetClass;
+	
+	UUserWidget* EndGameWidget;
+
+	UFUNCTION(BlueprintCallable)
+	void ShowEndGameWidget(bool bPlayerOrAI);
 };

@@ -52,6 +52,15 @@ void AABall::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	APongGameState* gs = GetWorld()->GetGameState<APongGameState>();
+	if (gs)
+	{
+		if (!gs->bGameStarted)
+		{
+			return;
+		}
+	}
+
 	MoveSpeed += SpeedIncreaseRate * DeltaTime;
 
 	if (!Velocity.IsNearlyZero())
@@ -101,7 +110,7 @@ void AABall::Tick(float DeltaTime)
 		}
 		else
 		{
-			if (APongGameState* gs = GetWorld()->GetGameState<APongGameState>())
+			if (gs)
 			{
 				gs->AIScore++;
 
@@ -145,7 +154,7 @@ void AABall::Tick(float DeltaTime)
 		}
 		else
 		{
-			if (APongGameState* gs = GetWorld()->GetGameState<APongGameState>())
+			if (gs)
 			{
 				gs->PlayerScore++;
 

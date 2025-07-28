@@ -2,6 +2,7 @@
 
 #include "PongGameState.h"
 
+#include "PongGameMode.h"
 #include "Kismet/GameplayStatics.h"
 
 APongGameState::APongGameState()
@@ -13,7 +14,10 @@ APongGameState::APongGameState()
 void APongGameState::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-	ElapsedTime += DeltaSeconds;
+	if (bGameStarted)
+	{
+		ElapsedTime += DeltaSeconds;
+	}
 }
 
 FString APongGameState::GetGameTimeText() const
@@ -28,6 +32,14 @@ FString APongGameState::GetGameTimeText() const
 
 void APongGameState::EndGame(bool bPlayerOrAI)
 {
+	bGameStarted = false;
+
+	if (APongGameMode* GM = GetWorld()->GetAuthGameMode<APongGameMode>())
+	{
+		GM->ShowEndGameWidget(bPlayerOrAI);
+	}
+
+	/*
 	if (bPlayerOrAI)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Cyan, TEXT("Player Win"));
@@ -35,5 +47,5 @@ void APongGameState::EndGame(bool bPlayerOrAI)
 	else
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, TEXT("AI Win"));
-	}
+	}*/
 }

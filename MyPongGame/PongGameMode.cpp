@@ -14,20 +14,23 @@ void APongGameMode::BeginPlay()
 {
     Super::BeginPlay();
 
-    if (MainMenuWidgetClass)
-    {
-        MainMenuWidget = CreateWidget<UUserWidget>(GetWorld(), MainMenuWidgetClass);
-        if (MainMenuWidget)
-        {
-            MainMenuWidget->AddToViewport();
+    FString CurrentLevelName = GetWorld()->GetMapName();
+    CurrentLevelName.RemoveFromStart(GetWorld()->StreamingLevelsPrefix);
 
-            APlayerController* PC = GetWorld()->GetFirstPlayerController(); 
-            if (PC)
+    if (CurrentLevelName == TEXT("MainMenu"))
+    {
+        if (MainMenuWidgetClass)
+        {
+            MainMenuWidget = CreateWidget<UUserWidget>(GetWorld(), MainMenuWidgetClass);
+            if (MainMenuWidget)
             {
-                FInputModeUIOnly InputMode;
-                InputMode.SetWidgetToFocus(MainMenuWidget->TakeWidget());
-                PC->SetInputMode(InputMode);
-                PC->bShowMouseCursor = true;
+                APlayerController* PC = GetWorld()->GetFirstPlayerController();
+                if (PC)
+                {
+                    PC->bShowMouseCursor = true;
+                }
+
+                MainMenuWidget->AddToViewport();
             }
         }
     }
@@ -44,6 +47,36 @@ void APongGameMode::BeginPlay()
             if (PC)
             {
                 PC->SetViewTarget(CameraActor); 
+            }
+        }
+    }
+}
+
+void APongGameMode::ShowEndGameWidget(bool bPlayerOrAI)
+{
+    if (EndGameWidgetClass)
+    {
+        EndGameWidget = CreateWidget<UUserWidget>(GetWorld(), EndGameWidgetClass);
+        if (EndGameWidget) 
+        {
+            APlayerController* PC = GetWorld()->GetFirstPlayerController();
+            if (PC)
+            {
+                PC->bShowMouseCursor = true;
+            }
+
+            EndGameWidget->AddToViewport();
+
+            UFunction* SetWinnerFunc = EndGameWidget->FindFunction(FName("SetWinner"));
+            if (SetWinnerFunc)
+            {
+                struct
+                {
+                    bool bPlayerOrAI;
+                } Params;
+
+                Params.bPlayerOrAI = bPlayerOrAI;
+                EndGameWidget->ProcessEvent(SetWinnerFunc, &Params);
             }
         }
     }
