@@ -1,6 +1,8 @@
 # PongGame
 Unreal Engine 5.4.4 with C++
 
+I finished the single-player mode, and I am thinking of adding the multiplayer mode.
+
 <img width="1278" height="722" alt="Screenshot 2025-07-23 234316" src="https://github.com/user-attachments/assets/cbf8017a-368b-4193-9dea-17f0e0cff9ba" />
 New Map! This image is about v0.6 of pong game.
 
